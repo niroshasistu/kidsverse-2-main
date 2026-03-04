@@ -1,0 +1,427 @@
+/* ===== PAGE BACKGROUND ===== */
+
+.login-container{
+  height:100vh;
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  position:relative;
+
+  background: linear-gradient(-45deg,#a1c4fd,#c2e9fb,#fbc2eb,#a6c1ee);
+  background-size:400% 400%;
+  animation:skyAnimation 12s ease infinite;
+}
+
+@keyframes skyAnimation{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+
+
+/* ===== LOGIN CARD ===== */
+
+.login-card{
+  background:white;
+  padding:40px;
+  width:360px;
+  border-radius:25px;
+  text-align:center;
+  z-index:2;
+
+  box-shadow:0 20px 40px rgba(0,0,0,0.2);
+  animation:cardFloat 4s ease-in-out infinite;
+}
+
+@keyframes cardFloat{
+  0%{transform:translateY(0px);}
+  50%{transform:translateY(-10px);}
+  100%{transform:translateY(0px);}
+}
+
+
+/* ===== KID IMAGE ===== */
+
+.kid-image{
+  width:80px;
+  margin-bottom:10px;
+}
+
+
+/* ===== TEXT ===== */
+
+.welcome-text{
+  font-size:14px;
+  color:#777;
+  margin-bottom:20px;
+}
+
+
+/* ===== INPUT FIELDS ===== */
+
+.login-input{
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+
+  border-radius:25px;
+  border:2px solid #eee;
+
+  font-size:14px;
+  outline:none;
+  transition:0.3s;
+}
+
+.login-input:focus{
+  border-color:#ff7eb3;
+  box-shadow:0 0 5px rgba(255,126,179,0.5);
+}
+
+
+/* ===== LOGIN BUTTON ===== */
+
+.login-button{
+  width:100%;
+  padding:12px;
+
+  border:none;
+  border-radius:25px;
+
+  background:linear-gradient(45deg,#ff7eb3,#ff758c);
+  color:white;
+  font-size:16px;
+
+  cursor:pointer;
+  margin-top:10px;
+
+  transition:0.3s;
+}
+
+.login-button:hover{
+  transform:scale(1.05);
+}
+
+
+/* ===== GOOGLE BUTTON ===== */
+
+.google-btn{
+  margin-top:15px;
+  width:100%;
+  padding:10px;
+
+  border:none;
+  border-radius:20px;
+
+  background:#db4437;
+  color:white;
+
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.google-btn:hover{
+  transform:scale(1.05);
+}
+
+
+/* ===== ERROR TEXT ===== */
+
+.error-text{
+  color:red;
+  font-size:13px;
+  margin-top:10px;
+}
+
+
+/* ===== DIVIDER ===== */
+
+.divider{
+  margin-top:15px;
+  font-size:13px;
+  color:#888;
+}
+
+
+/* ===== CLOUDS ===== */
+
+.cloud{
+  position:absolute;
+  width:140px;
+  opacity:0.8;
+  animation:cloudMove linear infinite;
+}
+
+.cloud1{
+  top:10%;
+  left:-200px;
+  animation-duration:60s;
+}
+
+.cloud2{
+  top:35%;
+  left:-250px;
+  animation-duration:70s;
+}
+
+.cloud3{
+  top:65%;
+  left:-220px;
+  animation-duration:80s;
+}
+
+@keyframes cloudMove{
+  from{
+    transform:translateX(0);
+  }
+  to{
+    transform:translateX(140vw);
+  }
+}
+
+
+/* ===== FLOATING BUBBLES ===== */
+
+.bubble{
+  position:absolute;
+  bottom:-100px;
+
+  width:20px;
+  height:20px;
+
+  background:white;
+  border-radius:50%;
+  opacity:0.5;
+
+  animation:floatUp 12s infinite;
+}
+
+@keyframes floatUp{
+  from{
+    transform:translateY(0);
+  }
+  to{
+    transform:translateY(-120vh);
+  }
+}
+
+
+/* ===== STARS ===== */
+
+.star{
+  position:absolute;
+  font-size:20px;
+  animation:twinkle 3s infinite alternate;
+}
+
+@keyframes twinkle{
+  from{opacity:0.3;}
+  to{opacity:1;}
+}
+/* CLOUD STYLE */
+
+.cloud{
+  position:absolute;
+  width:120px;
+  height:60px;
+  background:white;
+  border-radius:50px;
+  opacity:0.8;
+}
+
+/* extra cloud circles */
+
+.cloud::before,
+.cloud::after{
+  content:"";
+  position:absolute;
+  background:white;
+  border-radius:50%;
+}
+
+.cloud::before{
+  width:70px;
+  height:70px;
+  top:-30px;
+  left:10px;
+}
+
+.cloud::after{
+  width:60px;
+  height:60px;
+  top:-20px;
+  right:10px;
+}
+
+/* CLOUD POSITIONS */
+
+.cloud1{
+  top:10%;
+  left:-150px;
+  animation:cloudMove 60s linear infinite;
+}
+
+.cloud2{
+  top:35%;
+  left:-200px;
+  animation:cloudMove 80s linear infinite;
+}
+
+.cloud3{
+  top:65%;
+  left:-180px;
+  animation:cloudMove 70s linear infinite;
+}
+
+/* CLOUD MOVEMENT */
+
+@keyframes cloudMove{
+  from{
+    transform:translateX(0);
+  }
+  to{
+    transform:translateX(120vw);
+  }
+}
+/* SPARKLES */
+
+.sparkle{
+  position:absolute;
+  font-size:22px;
+  animation:sparkleTwinkle 2s infinite alternate;
+}
+
+.s1{
+  top:25%;
+  left:40%;
+}
+
+.s2{
+  top:35%;
+  right:30%;
+}
+
+.s3{
+  bottom:30%;
+  left:45%;
+}
+
+@keyframes sparkleTwinkle{
+  from{
+    opacity:0.3;
+    transform:scale(0.8);
+  }
+  to{
+    opacity:1;
+    transform:scale(1.2);
+  }
+}
+/* TEDDY ANIMATION */
+
+/* TEDDY EMOJI */
+
+.teddy{
+  position:absolute;
+  font-size:40px;
+  animation:teddyBounce 3s infinite ease-in-out;
+}
+
+/* positions */
+
+.t1{
+  bottom:20%;
+  left:10%;
+}
+
+.t2{
+  top:25%;
+  right:15%;
+}
+
+.t3{
+  bottom:15%;
+  right:40%;
+}
+
+/* animation */
+
+@keyframes teddyBounce{
+  0%{
+    transform:translateY(0);
+  }
+  50%{
+    transform:translateY(-20px);
+  }
+  100%{
+    transform:translateY(0);
+  }
+0%{transform:translateY(0);}
+}
+/* RAINBOW ROAD */
+
+.rainbow{
+  position:absolute;
+  bottom:0;
+  width:100%;
+  height:80px;
+
+  background:linear-gradient(
+    to right,
+    red,
+    orange,
+    yellow,
+    green,
+    blue,
+    indigo,
+    violet
+  );
+
+  opacity:0.6;
+}
+/* BALLOONS */
+
+.balloon{
+  position:absolute;
+  bottom:-100px;
+  width:40px;
+  height:50px;
+  border-radius:50%;
+  animation:balloonFloat 12s infinite ease-in;
+}
+
+.balloon::after{
+  content:"";
+  position:absolute;
+  width:2px;
+  height:40px;
+  background:#555;
+  left:50%;
+  top:50px;
+}
+
+.balloon1{
+  left:15%;
+  background:#ff7eb3;
+}
+
+.balloon2{
+  left:50%;
+  background:#ffd166;
+  animation-delay:3s;
+}
+
+.balloon3{
+  left:80%;
+  background:#06d6a0;
+  animation-delay:6s;
+}
+
+@keyframes balloonFloat{
+  from{
+    transform:translateY(0);
+  }
+  to{
+    transform:translateY(-120vh);
+  }
+}
