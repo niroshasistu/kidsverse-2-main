@@ -261,13 +261,13 @@
   }
 }/* Logout button style matching your theme */
 .logout-btn {
-  padding: 8px 15px;
-  border-radius: 15px;
-  background: linear-gradient(135deg, #f6d365, #fda085);
-  color: #333;
-  font-weight: bold;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: #ff6b6b;
+  color: white;
   border: none;
   cursor: pointer;
+  font-weight: bold;
   transition: transform 0.3s;
 }
 

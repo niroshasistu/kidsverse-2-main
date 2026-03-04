@@ -1,36 +1,35 @@
+// src/pages/LearningZone.js
 import React, { useState, useEffect, useRef, useContext } from "react";
+import { useAuth } from "../context/AuthContext"; // ✅ check if logged in
+import { useNavigate } from "react-router-dom";
 import "./LearningZone.css";
 import bg1 from "../assets/bg1.jpg";
 import bg2 from "../assets/bg2.jpg";
 import bg3 from "../assets/bg3.jpg";
 import { ChildProgressContext } from "../context/ChildProgressContext";
 
+// Data
 const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 const numbers = Array.from({ length: 1000 }, (_, i) => i + 1);
 const tables = Array.from({ length: 20 }, (_, i) => i + 1);
-
+const shapes = ["circle", "triangle", "square", "rectangle", "oval", "rhombus"];
+const colors = ["Red", "Blue", "Green", "Yellow", "Orange", "Purple", "Pink"];
 const bgImages = [bg1, bg2, bg3];
 
-// Sum generators
+// Generate math questions
 const generateQuestion = (type) => {
-  let a = Math.floor(Math.random() * 10) + 1;
-  let b = Math.floor(Math.random() * 10) + 1;
-
+  const a = Math.floor(Math.random() * 10) + 1;
+  const b = Math.floor(Math.random() * 10) + 1;
   switch (type) {
-    case "addition":
-      return { question: `${a} + ${b}`, answer: a + b };
-    case "subtraction":
-      return { question: `${a + b} - ${a}`, answer: b };
-    case "multiplication":
-      return { question: `${a} × ${b}`, answer: a * b };
-    case "division":
-      return { question: `${a * b} ÷ ${a}`, answer: b };
-    default:
-      return { question: "0 + 0", answer: 0 };
+    case "addition": return { question: `${a} + ${b}`, answer: a + b };
+    case "subtraction": return { question: `${a + b} - ${a}`, answer: b };
+    case "multiplication": return { question: `${a} × ${b}`, answer: a * b };
+    case "division": return { question: `${a * b} ÷ ${a}`, answer: b };
+    default: return { question: "0 + 0", answer: 0 };
   }
 };
 
-// Interactive Sum Practice
+// SumPractice Component
 const SumPractice = ({ type, updateProgress }) => {
   const [current, setCurrent] = useState(generateQuestion(type));
   const [userAnswer, setUserAnswer] = useState("");
@@ -52,42 +51,44 @@ const SumPractice = ({ type, updateProgress }) => {
   };
 
   return (
-    <div className="table-card" style={{ marginTop: "20px", textAlign: "center" }}>
+    <div className="table-card">
       <h4>Question: {current.question} = ?</h4>
-
       <input
         type="number"
         value={userAnswer}
         onChange={(e) => setUserAnswer(e.target.value)}
         placeholder="Your answer"
-        style={{ padding: "8px", marginTop: "10px" }}
       />
-
-      <div style={{ marginTop: "10px" }}>
-        <button className="hero-card button" onClick={checkAnswer}>
-          Check
-        </button>
-        <button className="hero-card button" onClick={nextQuestion}>
-          Next
-        </button>
+      <div className="sum-buttons">
+        <button onClick={checkAnswer}>Check</button>
+        <button onClick={nextQuestion}>Next</button>
       </div>
-
-      {message && <p style={{ marginTop: "10px" }}>{message}</p>}
+      {message && <p>{message}</p>}
     </div>
   );
 };
 
+// LearningZone Page
 const LearningZone = () => {
+  const { user } = useAuth(); // ✅ check login
+  const navigate = useNavigate();
   const { progress, updateProgress } = useContext(ChildProgressContext);
 
   const [stage, setStage] = useState(null);
   const [currentBg, setCurrentBg] = useState(0);
-  const contentRef = useRef(null);
-  const [expandedTables, setExpandedTables] = useState([]);
   const [sumType, setSumType] = useState(null);
-  const [numPage, setNumPage] = useState(0);
-  const numbersPerPage = 100;
 
+  const contentRef = useRef(null);
+
+  // Redirect if not logged in
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+      alert("Please login to access Learning Zone! 🌟");
+    }
+  }, [user, navigate]);
+
+  // Background slideshow
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentBg((prev) => (prev + 1) % bgImages.length);
@@ -95,29 +96,23 @@ const LearningZone = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleExplore = (value) => {
-    setStage(value);
-    updateProgress("stars", 1);
-
-    setTimeout(() => {
-      contentRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, 100);
-  };
-
-  const toggleTable = (num) => {
-    setExpandedTables((prev) =>
-      prev.includes(num) ? prev.filter((n) => n !== num) : [...prev, num]
-    );
-  };
-  // 🔊 Voice Function
+  // Voice
   const speakText = (text) => {
     const speech = new SpeechSynthesisUtterance(text);
     speech.lang = "en-US";
-    speech.rate = 0.9;   // speed
-    speech.pitch = 1.2;  // voice tone
-    window.speechSynthesis.cancel(); // stop previous voice
+    speech.rate = 0.9;
+    speech.pitch = 1.2;
+    window.speechSynthesis.cancel();
     window.speechSynthesis.speak(speech);
   };
+
+  // Choose stage
+  const handleExplore = (value) => {
+    setStage(value);
+    updateProgress("stars", 1);
+    setTimeout(() => contentRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
+  };
+
   return (
     <>
       {/* HERO SECTION */}
@@ -134,9 +129,7 @@ const LearningZone = () => {
               (item, index) => (
                 <div className="hero-card" key={item}>
                   <h3>{item}</h3>
-                  <button onClick={() => handleExplore(index + 1)}>
-                    Let's Learn
-                  </button>
+                  <button onClick={() => handleExplore(index + 1)}>Let's Learn</button>
                 </div>
               )
             )}
@@ -146,11 +139,7 @@ const LearningZone = () => {
 
       {/* CONTENT SECTION */}
       <section className="content-section" ref={contentRef}>
-
-        {/* ⭐ BIG GLOWING STARS */}
-        <div className="stars-display">
-          ⭐⭐ {progress.stars} Stars Earned ⭐⭐
-        </div>
+        <div className="stars-display">⭐⭐ {progress.stars} Stars Earned ⭐⭐</div>
 
         {/* Alphabets */}
         {stage === 1 && (
@@ -173,37 +162,17 @@ const LearningZone = () => {
         {/* Numbers */}
         {stage === 2 && (
           <>
-            <h2>Numbers (Page {numPage + 1})</h2>
+            <h2>Numbers</h2>
             <div className="learning-grid">
-              {numbers
-                .slice(numPage * numbersPerPage, (numPage + 1) * numbersPerPage)
-                .map((num) => (
-                  <div
-                    key={num}
-                    className="learning-card"
-                    onMouseEnter={() => speakText(num.toString())}
-                  >
-                    {num}
-                  </div>
-                ))}
-            </div>
-
-            <div style={{ marginTop: "20px" }}>
-              <button
-                className="hero-card button"
-                disabled={numPage === 0}
-                onClick={() => setNumPage((prev) => prev - 1)}
-              >
-                ◀ Previous
-              </button>
-
-              <button
-                className="hero-card button"
-                disabled={(numPage + 1) * numbersPerPage >= numbers.length}
-                onClick={() => setNumPage((prev) => prev + 1)}
-              >
-                Next ▶
-              </button>
+              {numbers.slice(0, 100).map((num) => (
+                <div
+                  key={num}
+                  className="learning-card"
+                  onMouseEnter={() => speakText(num.toString())}
+                >
+                  {num}
+                </div>
+              ))}
             </div>
           </>
         )}
@@ -215,18 +184,12 @@ const LearningZone = () => {
             <div className="tables-grid">
               {tables.map((num) => (
                 <div key={num} className="table-card">
-                  <h4 onClick={() => toggleTable(num)}>
-                    Table of {num} {expandedTables.includes(num) ? "▲" : "▼"}
-                  </h4>
-                  {expandedTables.includes(num) && (
-                    <ul>
-                      {Array.from({ length: 10 }, (_, i) => (
-                        <li key={i}>
-                          {num} × {i + 1} = {num * (i + 1)}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+                  <h4>Table of {num}</h4>
+                  <ul>
+                    {Array.from({ length: 10 }, (_, i) => (
+                      <li key={i}>{num} × {i + 1} = {num * (i + 1)}</li>
+                    ))}
+                  </ul>
                 </div>
               ))}
             </div>
@@ -238,18 +201,16 @@ const LearningZone = () => {
           <>
             <h2>Shapes</h2>
             <div className="learning-grid">
-              {["circle", "triangle", "square", "rectangle", "oval", "rhombus"].map(
-                (shape) => (
-                  <div
-                    key={shape}
-                    className="shape-card"
-                    onMouseEnter={() => speakText(shape)}
-                  >
-                    <div className={shape}></div>
-                    <p className="shape-name">{shape}</p>
-                  </div>
-                )
-              )}
+              {shapes.map((shape) => (
+                <div
+                  key={shape}
+                  className="shape-card"
+                  onMouseEnter={() => speakText(shape)}
+                >
+                  <div className={shape}></div>
+                  <p>{shape}</p>
+                </div>
+              ))}
             </div>
           </>
         )}
@@ -259,26 +220,24 @@ const LearningZone = () => {
           <>
             <h2>Colors</h2>
             <div className="learning-grid">
-              {["Red", "Blue", "Green", "Yellow", "Orange", "Purple", "Pink"].map(
-                (color) => (
+              {colors.map((color) => (
+                <div
+                  key={color}
+                  className="learning-card"
+                  onMouseEnter={() => speakText(color)}
+                >
                   <div
-                    key={color}
-                    className="learning-card"
-                    onMouseEnter={() => speakText(color)}
-                  >
-                    <div
-                      style={{
-                        backgroundColor: color.toLowerCase(),
-                        height: "60px",
-                        borderRadius: "10px",
-                        width: "60px",
-                        margin: "auto",
-                      }}
-                    ></div>
-                    <p style={{ fontSize: "14px", marginTop: "8px" }}>{color}</p>
-                  </div>
-                )
-              )}
+                    style={{
+                      backgroundColor: color.toLowerCase(),
+                      height: "60px",
+                      width: "60px",
+                      borderRadius: "10px",
+                      margin: "auto",
+                    }}
+                  />
+                  <p>{color}</p>
+                </div>
+              ))}
             </div>
           </>
         )}
@@ -287,27 +246,22 @@ const LearningZone = () => {
         {stage === 6 && (
           <>
             <h2>Sums (Practice Time)</h2>
-
             <div className="learning-grid">
-              {["addition", "subtraction", "multiplication", "division"].map(
-                (type) => (
-                  <div
-                    key={type}
-                    className="learning-card"
-                    onClick={() => setSumType(type)}
-                  >
-                    {type === "addition" && "➕ Addition"}
-                    {type === "subtraction" && "➖ Subtraction"}
-                    {type === "multiplication" && "✖️ Multiplication"}
-                    {type === "division" && "➗ Division"}
-                  </div>
-                )
-              )}
+              {["addition", "subtraction", "multiplication", "division"].map((type) => (
+                <div
+                  key={type}
+                  className="learning-card"
+                  onClick={() => setSumType(type)}
+                >
+                  {type === "addition" && "➕ Addition"}
+                  {type === "subtraction" && "➖ Subtraction"}
+                  {type === "multiplication" && "✖️ Multiplication"}
+                  {type === "division" && "➗ Division"}
+                </div>
+              ))}
             </div>
 
-            {sumType && (
-              <SumPractice type={sumType} updateProgress={updateProgress} />
-            )}
+            {sumType && <SumPractice type={sumType} updateProgress={updateProgress} />}
           </>
         )}
       </section>

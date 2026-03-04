@@ -43,23 +43,27 @@ const Login = () => {
 
   return (
     <div className="login-container">
+
+      {/* Sparkles */}
       <div className="sparkle s1">✨</div>
       <div className="sparkle s2">✨</div>
       <div className="sparkle s3">✨</div>
-      {/* Teddy Bears */}
 
-<div className="teddy t1">🧸</div>
-<div className="teddy t2">🧸</div>
-<div className="teddy t3">🧸</div>
+      {/* Teddy Bears */}
+      <div className="teddy t1">🧸</div>
+      <div className="teddy t2">🧸</div>
+      <div className="teddy t3">🧸</div>
+
       <div className="rainbow"></div>
       <div className="balloon balloon1"></div>
       <div className="balloon balloon2"></div>
       <div className="balloon balloon3"></div>
-      {/* Clouds */}
 
+      {/* Clouds */}
       <div className="cloud cloud1"></div>
       <div className="cloud cloud2"></div>
       <div className="cloud cloud3"></div>
+
       {/* Stars */}
       <div className="star" style={{ top: "20%", left: "15%" }}>⭐</div>
       <div className="star" style={{ top: "40%", left: "80%" }}>⭐</div>
@@ -112,8 +116,25 @@ const Login = () => {
           Login with Google
         </button>
 
-      </div>
+        {/* ✅ Sign Up link with bouncing teddy emoji */}
+        <p className="signup-prompt">
+          Don’t have an account?{" "}
+          <span
+            className="signup-link"
+            onClick={() => navigate("/signup")}
+            style={{
+              color: "#ff6b6b",
+              fontWeight: "bold",
+              cursor: "pointer",
+              display: "inline-flex",
+              alignItems: "center",
+            }}
+          >
+            🧸 Sign Up
+          </span>
+        </p>
 
+      </div>
     </div>
   );
 };

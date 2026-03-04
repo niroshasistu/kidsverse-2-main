@@ -3,34 +3,24 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import logo from "../assets/kidopia-logo.svg";
 import { useAuth } from "../context/AuthContext";
-import { auth } from "../firebase";
 import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-
-  const { currentUser } = useAuth(); // ✅ check login state
+  const { user } = useAuth(); // ✅ get logged-in user
   const navigate = useNavigate();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      alert("👋 Logged out successfully!");
-      navigate("/login");
-      setMenuOpen(false);
-    } catch (err) {
-      console.error(err);
-      alert("❌ Logout failed!");
-    }
+    await signOut(auth);
+    navigate("/login");
   };
 
   return (
@@ -41,12 +31,12 @@ const Navbar = () => {
         </Link>
       </div>
 
-      {/* Hamburger for mobile */}
+      {/* Hamburger menu */}
       <div className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
         ☰
       </div>
 
-      {/* Links + Auth buttons */}
+      {/* Navbar Links */}
       <ul className={`navbar-links ${menuOpen ? "active" : ""}`}>
         <li><Link to="/" onClick={() => setMenuOpen(false)}>Home</Link></li>
         <li><Link to="/learningzone" onClick={() => setMenuOpen(false)}>Learning Zone</Link></li>
@@ -54,36 +44,32 @@ const Navbar = () => {
         <li><Link to="/storyworld" onClick={() => setMenuOpen(false)}>Story World</Link></li>
         <li><Link to="/creativitystudio" onClick={() => setMenuOpen(false)}>Creativity Studio</Link></li>
 
-        {/* ✅ Mobile auth buttons */}
-        {!currentUser ? (
+        {/* Mobile auth buttons */}
+        {!user ? (
           <>
             <li className="mobile-auth">
-              <Link to="/login" onClick={() => setMenuOpen(false)} className="login-btn">
-                Login
-              </Link>
+              <Link to="/login" onClick={() => setMenuOpen(false)} className="login-btn">Login</Link>
             </li>
             <li className="mobile-auth">
-              <Link to="/signup" onClick={() => setMenuOpen(false)} className="signup-btn">
-                Sign Up
-              </Link>
+              <Link to="/signup" onClick={() => setMenuOpen(false)} className="signup-btn">Sign Up</Link>
             </li>
           </>
         ) : (
           <li className="mobile-auth">
-            <button onClick={handleLogout} className="logout-btn">Logout</button>
+            <button className="logout-btn" onClick={handleLogout}>Logout</button>
           </li>
         )}
       </ul>
 
       {/* Desktop auth buttons */}
       <div className="nav-right">
-        {!currentUser ? (
+        {!user ? (
           <>
             <Link to="/login" className="login-btn">Login</Link>
             <Link to="/signup" className="signup-btn">Sign Up</Link>
           </>
         ) : (
-          <button onClick={handleLogout} className="logout-btn">Logout</button>
+          <button className="logout-btn" onClick={handleLogout}>Logout</button>
         )}
       </div>
     </div>
