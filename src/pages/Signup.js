@@ -5,29 +5,34 @@ import { useNavigate, Link } from "react-router-dom";
 import "./Signup.css";
 
 const Signup = () => {
-
-  const [email,setEmail] = useState("");
-  const [password,setPassword] = useState("");
-  const [error,setError] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(""); // ✅ New state for success message
 
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccess(""); // clear previous messages
 
     try {
-      await createUserWithEmailAndPassword(auth,email,password);
-      alert("Signup Successful 🎉");
-      navigate("/");
-    } 
-    catch (err) {
+      await createUserWithEmailAndPassword(auth, email, password);
+      setSuccess("Signup Successful 🎉"); // ✅ show success message
+      setEmail("");
+      setPassword("");
+
+      // Optional: redirect after 2 seconds
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+    } catch (err) {
       setError(err.message);
     }
   };
 
   return (
-
     <div className="signup-container">
 
       {/* Clouds */}
@@ -49,16 +54,14 @@ const Signup = () => {
       <div className="balloon balloon2"></div>
 
       <div className="signup-card">
-
         <h2>Create Account ✨</h2>
 
         <form onSubmit={handleSignup}>
-
           <input
             type="email"
             placeholder="Enter Email"
             value={email}
-            onChange={(e)=>setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             required
             className="signup-input"
           />
@@ -67,7 +70,7 @@ const Signup = () => {
             type="password"
             placeholder="Enter Password"
             value={password}
-            onChange={(e)=>setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             required
             className="signup-input"
           />
@@ -76,8 +79,9 @@ const Signup = () => {
             Sign Up
           </button>
 
+          {/* ✅ Show error or success messages */}
           {error && <p className="error-text">{error}</p>}
-
+          {success && <p className="success-text">{success}</p>}
         </form>
 
         <p style={{marginTop:"15px"}}>
@@ -86,7 +90,6 @@ const Signup = () => {
             Login
           </Link>
         </p>
-
       </div>
     </div>
   );
