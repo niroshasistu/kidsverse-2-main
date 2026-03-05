@@ -5,13 +5,12 @@ import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
 import kid from "../assets/kid.svg";
-import cloud from "../assets/cloud.png";
 
 const Login = () => {
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(""); // ✅ new state for success messages
 
   const navigate = useNavigate();
 
@@ -19,11 +18,18 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      alert("Welcome to KidsVerse 🎉");
-      navigate("/");
+      setSuccess("Login Successful 🎉"); // show success on page
+      setEmail("");
+      setPassword("");
+
+      // Optional: redirect after 2 seconds
+      setTimeout(() => {
+        navigate("/"); // redirect to home/dashboard
+      }, 2000);
     } catch (err) {
       setError("Invalid Email or Password");
     }
@@ -32,58 +38,29 @@ const Login = () => {
   // Google Login
   const handleGoogleLogin = async () => {
     const provider = new GoogleAuthProvider();
+    setError("");
+    setSuccess("");
 
     try {
       await signInWithPopup(auth, provider);
-      navigate("/");
-    } catch (error) {
+      setSuccess("Login Successful 🎉");
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    } catch (err) {
       setError("Google Login Failed");
     }
   };
 
   return (
     <div className="login-container">
-
-      {/* Sparkles */}
-      <div className="sparkle s1">✨</div>
-      <div className="sparkle s2">✨</div>
-      <div className="sparkle s3">✨</div>
-
-      {/* Teddy Bears */}
-      <div className="teddy t1">🧸</div>
-      <div className="teddy t2">🧸</div>
-      <div className="teddy t3">🧸</div>
-
-      <div className="rainbow"></div>
-      <div className="balloon balloon1"></div>
-      <div className="balloon balloon2"></div>
-      <div className="balloon balloon3"></div>
-
-      {/* Clouds */}
-      <div className="cloud cloud1"></div>
-      <div className="cloud cloud2"></div>
-      <div className="cloud cloud3"></div>
-
-      {/* Stars */}
-      <div className="star" style={{ top: "20%", left: "15%" }}>⭐</div>
-      <div className="star" style={{ top: "40%", left: "80%" }}>⭐</div>
-      <div className="star" style={{ top: "70%", left: "25%" }}>⭐</div>
-
-      {/* Bubbles */}
-      <div className="bubble" style={{ left: "10%" }}></div>
-      <div className="bubble" style={{ left: "40%" }}></div>
-      <div className="bubble" style={{ left: "70%" }}></div>
-
       {/* Login Card */}
       <div className="login-card">
-
         <img src={kid} alt="Kids Character" className="kid-image" />
-
         <h2>🧸 KidsVerse Login</h2>
         <p className="welcome-text">Welcome Little Explorer!</p>
 
         <form onSubmit={handleLogin}>
-
           <input
             type="email"
             placeholder="Enter Email"
@@ -92,7 +69,6 @@ const Login = () => {
             required
             className="login-input"
           />
-
           <input
             type="password"
             placeholder="Enter Password"
@@ -101,13 +77,13 @@ const Login = () => {
             required
             className="login-input"
           />
-
           <button type="submit" className="login-button">
             🚀 Login
           </button>
 
+          {/* ✅ Display messages */}
           {error && <p className="error-text">{error}</p>}
-
+          {success && <p className="success-text">{success}</p>}
         </form>
 
         <p className="divider">or continue with</p>
@@ -116,7 +92,6 @@ const Login = () => {
           Login with Google
         </button>
 
-        {/* ✅ Sign Up link with bouncing teddy emoji */}
         <p className="signup-prompt">
           Don’t have an account?{" "}
           <span
@@ -133,7 +108,6 @@ const Login = () => {
             🧸 Sign Up
           </span>
         </p>
-
       </div>
     </div>
   );
